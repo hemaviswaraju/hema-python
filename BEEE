@@ -1,0 +1,261 @@
+15) Find Stability of a System Using Routh Hurwitz Criterion.
+
+clear;
+clc;
+mode(0);
+s=%s;
+//H=𝑠5+7𝑠4+6𝑠3+42𝑠2+8𝑠+56 ;
+H=56+8*s+42*s^2+6*s^3+7*s^4+s^5;
+disp(H,'The given characteristics equation 1-G(s)H(s)=');
+c=coeff(H);
+len=length(c);
+r=routh_t(H);
+disp(r,"Rouths table=");
+x=0;
+for i=1:len
+if(r(i,1)<0)
+x=x+1;
+end
+end
+if(x>=1)
+printf("From Rouths table, it is clear that the system is unstable.")
+else
+printf("From Rouths table, it is clear that the system is stable.")
+end
+
+17 a)Unit step signal
+
+clear;
+close;
+N = 5; 
+t1 = -5:5;
+x2 = [zeros(1, N), ones(1, N+1)];
+subplot(2, 4, 2);
+plot2d3(t1, x2);
+xlabel("time");
+ylabel("Amplitude");
+title("Unit step signal");
+
+(b) Unit Impulse signal
+
+clear;
+close;
+
+// Define the time vector
+t1 = -5:5;
+
+// Define the unit impulse signal
+x_impulse = zeros(1, length(t1)); // Initialize with zeros
+x_impulse(find(t1 == 0)) = 1;     // Set value to 1 at t = 0
+
+// Create a subplot (2 rows, 4 columns, position 6)
+subplot(2, 4, 6);
+
+// Plot the unit impulse signal
+plot2d3(t1, x_impulse); // Use 'stem' for discrete signals
+
+// Add labels and title
+xlabel("Time");
+ylabel("Amplitude");
+title("Unit Impulse Signal");
+
+17 (c) Unit ramp signal
+
+// Clear all variables and close all figures
+clear;
+close;
+
+// Define time range
+t1 = -5:0.1:5; // Finer interval for smooth sinusoidal plot
+
+// Define the sinusoidal signal
+frequency = 1;  // Frequency of the sinusoid
+amplitude = 1;  // Amplitude of the sinusoid
+x5 = amplitude * sin(2 * %pi * frequency * t1);
+
+// Plot the sinusoidal signal
+subplot(2, 4, 5);
+plot2d(t1, x5);
+xlabel("time");
+ylabel("Amplitude");
+title("Sinusoidal signal");
+
+17 (d) Sinusoidal signal
+
+// Clear all variables and close all figures
+clear;
+close;
+
+// Define time range
+t1 = -5:0.1:5; // Finer interval for smooth sinusoidal plot
+
+// Define the sinusoidal signal
+frequency = 1;  // Frequency of the sinusoid
+amplitude = 1;  // Amplitude of the sinusoid
+x5 = amplitude * sin(2 * %pi * frequency * t1);
+
+// Plot the sinusoidal signal
+subplot(2, 4, 5);
+plot2d(t1, x5);
+xlabel("time");
+ylabel("Amplitude");
+title("Sinusoidal signal");
+
+17 (e) Exponential signal
+
+clear;
+close;
+t1 = 0:10;
+x_exponential = exp(-t1); 
+subplot(2, 4, 6);
+plot2d3(t1, x_exponential);
+xlabel("Time");
+ylabel("Amplitude");
+title("Exponential Signal");
+
+
+18. Write a SCILAB program to obtain the following:
+
+(a) DIT-FFT Algorithm
+clear; 
+clc ; 
+close ; 
+x = [1,-1,-1,-1,1,1,1,-1]; 
+//FFT Computation 
+X = fft (x , -1); 
+disp(X,'X(z) = ');
+
+(b) DIF-FFT Algorithm
+clear; 
+clc ; 
+close ; 
+x = [1,2,3,4,4,3,2,1]; 
+//FFT Computation 
+X = fft (x , -1); 
+disp(X,'X(z) = ');
+
+19. Design a filter using the Transformation Method.
+(a) Bilinear Transformation
+clear; 
+clc ; 
+close ; 
+s=%s; 
+z=%z; 
+HS=(s^2+4.525)/(s^2+0.692*s+0.504); 
+T=1; 
+HZ=horner(HS,(2/T)*(z-1)/(z+1)); 
+disp(HZ,'H(z) =');
+
+(b) Impulse Invariant Transformation
+clear; 
+clc ; 
+close ; 
+s=%s; 
+T=0.2; 
+HS=10/(s^2+7*s+10); 
+elts=pfss(HS); 
+disp(elts,'Factorized HS = '); 
+p1=-5; 
+p2=-2; 
+z=%z; 
+HZ=T*((-3.33/(1-%e^(p1*T)*z^(-1)))+(3.33/(1-%e^(p2*T)*z^(-1)))) 
+disp(HZ,'HZ = ');
+
+20. Write the SCILAB program to design the following Butterworth filters
+
+(a)Low pass filter
+clear;
+clc; 
+close;
+s = poly(0, 's');  
+Omegac = 0.2 * %pi;  
+H = Omegac / (s + Omegac);  
+T = 1;  
+z = poly(0, 'z');  
+Hz = horner(H, (2 / T) * ((z - 1) / (z + 1)));  
+HW = frmag(Hz(2), Hz(3), 512);
+W = 0:%pi/511:%pi; 
+plot(W / %pi, HW);
+a = gca();
+a.thickness = 3;  
+a.foreground = 1;  
+a.font_style = 9;  
+xgrid(1); 
+xtitle('Magnitude Response of Single Pole LPF Filter Cutoff Frequency = 0.2*pi', ...
+       'Digital Frequency -->', 'Magnitude');
+disp("Hz", Hz); 
+
+(b)High pass filter
+clear;
+clc;
+close;
+s = poly(0, 's');
+Omegac = 0.2 * %pi;
+H = Omegac / (s + Omegac);
+T = 1;
+z = poly(0, 'z');
+Hz_LPF = horner(H, (2 / T) * ((z - 1) / (z + 1)));
+alpha = -(cos((Omegac + Omegac) / 2)) / (cos((Omegac - Omegac) / 2));
+HZ_HPF = horner(Hz_LPF, -(z + alpha) / (1 + alpha * z));
+HW = frmag(HZ_HPF(2), HZ_HPF(3), 512);
+W = 0:%pi / 511:%pi;
+plot(W / %pi, HW);
+a = gca();
+a.thickness = 3;
+a.foreground = 1;
+a.font_style = 9;
+xgrid(1);
+xtitle('Magnitude Response of Single Pole HPF Filter (Cutoff Frequency = 0.2*pi)', ...
+       'Digital Frequency -->', 'Magnitude');
+disp("HZ_HPF = ", HZ_HPF);
+
+(c)Band pass filter
+clear; 
+clc; 
+close; 
+omegaP = 0.2*%pi; 
+omegaL =  (2/5)*%pi;                  
+omegaU =  (3/5)*%pi;        
+z=poly(0,'z');
+H_LPF = (0.245)(1+(z^-1))/(1-0.509(z^-1)) 
+alpha = (cos((omegaU+omegaL)/2)/cos((omegaU-omegaL)/2)); 
+k = (cos((omegaU - omegaL)/2)/sin((omegaU - omegaL)/2))*tan(omegaP/2); 
+NUM =-((z^2)-((2*alpha*k/(k+1))*z)+((k-1)/(k+1))); 
+DEN = (1-((2*alpha*k/(k+1))z)+(((k-1)/(k+1))(z^2))); 
+HZ_BPF=horner(H_LPF,NUM/DEN) 
+disp(HZ_BPF,'Digital BPF IIR Filter H(Z)= ') 
+HW  =frmag(HZ_BPF(2),HZ_BPF(3),512); 
+W = 0:%pi/511:%pi; 
+plot(W/%pi,HW) 
+a=gca(); 
+a.thickness = 3; 
+a.foreground = 1; 
+a.font_style = 9;  
+xgrid(1) 
+xtitle('Magnitude Response of BPF Filter', 'Digital Frequency--->','Magnitude'); 
+Disp(“HZ_BPF”,HZ_BPF);
+
+(d)Band reject filter.
+clear; 
+clc; 
+close; 
+omegaP = 0.2*%pi; 
+omegaL =  (2/5)*%pi;                  
+omegaU =  (3/5)*%pi;        
+z=poly(0,'z'); 
+H_LPF = (0.245)(1+(z^-1))/(1-0.509(z^-1)) 
+alpha = (cos((omegaU+omegaL)/2)/cos((omegaU-omegaL)/2)); 
+k = tan((omegaU - omegaL)/2)*tan(omegaP/2); 
+NUM =((z^2)-((2*alpha/(1+k))*z)+((1-k)/(1+k))); 
+DEN = (1-((2*alpha/(1+k))z)+(((1-k)/(1+k))(z^2))); 
+HZ_BSF=horner(H_LPF,NUM/DEN) 
+HW  =frmag(HZ_BSF(2),HZ_BSF(3),512); 
+W = 0:%pi/511:%pi; 
+plot(W/%pi,HW) 
+a=gca(); 
+a.thickness = 3; 
+a.foreground = 1; 
+a.font_style = 9;  
+xgrid(1) 
+xtitle('Magnitude Response of BSF Filter','Digital Frequency--->','Magnitude'); 
+Disp(“HZ_BSF”,HZ_BSF);
